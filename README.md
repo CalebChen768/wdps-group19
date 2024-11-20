@@ -12,13 +12,14 @@
 3. run `pip install -r requirements.txt` to install all the required packages
 4. run `python3 -m spacy download en_core_web_sm` to download NER model
 5.  `python3 code/run_task1.py` 
+6.  
 
 
 ## Task List
 
 ### Task 1
-
-- [x]  Entity extraction (Name entity recognition) ->调用spacy库进行提取
+- [x]  Ask question to a LLM and receive its answer -> (llm.py)
+- [x]  Entity extraction (Name entity recognition) -> 调用spacy库进行提取 (ner.py)
 - [ ]  Entity linking -> 需要我们实现
 	- [ ] candidate entity generation 
         - Name Dictionary Based Techniques:
