@@ -1,0 +1,1 @@
+docker run -it -d -v $(pwd)/group-19:/home/user/code karmaresearch/wdps2
