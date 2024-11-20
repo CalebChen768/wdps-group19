@@ -2,17 +2,20 @@
 
 ## Run the code
 ### run in local env
-1. run `pip install -r requirements.txt` to install all the required packages
-2. run `python3 -m spacy download en_core_web_sm` to download NER model
-3.  `python3 code/run_task1.py` 
-4.  
+1. copy llm model from the docker image
+2. run `pip install -r requirements.txt` to install all the required packages
+3. run `python3 -m spacy download en_core_web_sm` to download NER model
+4. `cd group-19`
+5. `python3 code/run_task1.py` 
+6.  
 ### build docker
 1. run `build_container.sh` to start the docker container
 2. use `docker exec -it [container id] bash` to enter the container
 3. run `pip install -r requirements.txt` to install all the required packages
 4. run `python3 -m spacy download en_core_web_sm` to download NER model
-5.  `python3 code/run_task1.py` 
-6.  
+5. `cd code`
+6. `python3 code/run_task1.py` 
+7.  
 
 
 ## Task List
