@@ -10,7 +10,7 @@ class EL:
         candidate_map = {}
         if source == "wikidata":
             for entity in entities:
-                candidate_map[entity] = kb.search_wikidata(entity)
+                candidate_map[entity] = kb.query_wikipedia_api(entity)
         else:
             print("Invalid Source")
         return candidate_map
