@@ -14,7 +14,7 @@ class Task:
         entities = self.ner.extract_entities(answer)
         entities_candidates = self.el.generate_candidates(entities)
         
-        return entities
+        return entities_candidates
     
 if __name__ == "__main__":
     # Define command line arguments

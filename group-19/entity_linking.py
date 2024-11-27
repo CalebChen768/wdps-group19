@@ -6,6 +6,7 @@ class EL:
         pass
 
     def generate_candidates(self, entities:list, source="wikidata"):
+        entities = [entity[0] for entity in entities] # to work with the results of ner
         candidate_map = {}
         if source == "wikidata":
             for entity in entities:
@@ -25,4 +26,4 @@ class EL:
 
 if __name__=="__main__":
     foo = EL()
-    print(foo.generate_candidates(['Apple', 'California']))
+    print(foo.generate_candidates([('Apple', "abc"), ('California', "def")])) # this is an ad hoc mock data
