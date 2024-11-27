@@ -11,22 +11,22 @@ class LLM:
         
         # If wish to use basic question answering prompting, uncomment the following lines.
         
-        # question = f"""<<SYS>>
-        #     You're are a helpful Assistant, and you only response to the "Assistant"
-        #     Remember, maintain a natural tone. Be precise, concise, and casual. Keep it short
-        #     <</SYS>>
-        #     [INST]
-        #     User:{question}
-        #     [/INST]\n
-        #     Assistant:"""
+        question = f"""<<SYS>>
+            You're are a helpful Assistant, and you only response to the "Assistant"
+            Remember, maintain a natural tone. Be precise, concise, and casual. Keep it short
+            <</SYS>>
+            [INST]
+            User:{question}
+            [/INST]\n
+            Assistant:"""
 
         output = self.llm(
             question, # Prompt
             max_tokens=32, # Generate up to 32 tokens
-            # stop=["Q:", "\n"], # Stop generating just before the model would generate a new question
-            stop=["Q:"],
-            echo=True # Echo the prompt back in the output
-            # echo=False # Echo the prompt back in the output
+            stop=["Q:", "\n\n", "\n "], # Stop generating just before the model would generate a new question
+            # stop=["Q:"],
+            # echo=True # Echo the prompt back in the output
+            echo=False # Echo the prompt back in the output
         )
         print("Here is the output")
         print(output['choices'])

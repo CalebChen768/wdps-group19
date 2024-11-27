@@ -13,8 +13,8 @@ class Task:
         answer = self.llm.ask(question)[0]['text']
         entities = self.ner.extract_entities(answer)
         entities_candidates = self.el.generate_candidates(entities)
-        
-        return entities_candidates
+        linked_entities = self.el.rank_candidates(answer, entities_candidates)
+        return linked_entities
     
 if __name__ == "__main__":
     # Define command line arguments
@@ -27,12 +27,14 @@ if __name__ == "__main__":
     # args = parser.parse_args()
     # question = args.question
 
-    while True:
-        print("Please input your question:")
-        question = input()
-        if question == "exit":
-            break
-        print(task.run(question))
+    # while True:
+    #     print("Please input your question:")
+    #     question = input()
+    #     if question == "exit":
+    #         break
+    #     print(task.run(question))
+    
+    print(task.run(question="Where is the captial of Italy?"))
 
     # .... implement other functions
 
