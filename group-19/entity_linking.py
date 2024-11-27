@@ -5,10 +5,13 @@ class EL:
     def __init__(self):
         pass
 
-    def generate_candidates(self, entities:list, source="wikidata"):
+    def generate_candidates(self, entities:list, source="wikipedia"):
         entities = [entity[0] for entity in entities] # to work with the results of ner
         candidate_map = {}
         if source == "wikidata":
+            for entity in entities:
+                candidate_map[entity] = kb.query_wikidata_api(entity)
+        elif source == "wikipedia":
             for entity in entities:
                 candidate_map[entity] = kb.query_wikipedia_api(entity)
         else:
