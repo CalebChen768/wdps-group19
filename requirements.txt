@@ -5,3 +5,4 @@ wikipedia-api
 torch
 requests
 transformers
+SPARQLWrapper

@@ -1,16 +1,19 @@
 from llm import LLM
 from ner import NER
+from entity_linking import EL
 import argparse
 
 class Task:
     def __init__(self):
         self.llm = LLM()
         self.ner = NER()
+        self.el = EL()
     
     def run(self, question):
         answer = self.llm.ask(question)[0]['text']
         entities = self.ner.extract_entities(answer)
-
+        entities_candidates = self.el.generate_candidates(entities)
+        
         return entities
     
 if __name__ == "__main__":
