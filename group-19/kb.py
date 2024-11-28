@@ -4,6 +4,11 @@ import wikipedia
 from typing import List, Dict
 from urllib.parse import quote
 import time
+import warnings 
+
+warnings.filterwarnings("ignore", category=UserWarning, module='wikipedia')
+
+
 def search_wikidata(mention):
     sparql = SPARQLWrapper("https://query.wikidata.org/sparql")
     query = f"""

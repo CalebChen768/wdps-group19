@@ -62,6 +62,16 @@ class EL:
         
         return linked_entities
     
+    def get_best_candidate(self, ranked_candidates):
+        top_candidates = {}
+        for item in ranked_candidates:
+            original_entity = item['original_entity']
+            confidence = item['confidence']
+            # 如果该实体尚未记录，或当前项的置信度更高，更新记录
+            if (original_entity not in top_candidates) or (confidence > top_candidates[original_entity]['confidence']):
+                top_candidates[original_entity] = item
+        return top_candidates
+
     
 
 

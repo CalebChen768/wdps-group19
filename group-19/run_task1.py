@@ -8,24 +8,64 @@ class Task:
         self.llm = LLM()
         self.ner = NER()
         self.el = EL()
-    
-    def run(self, question):
-        answer = self.llm.ask(question)[0]['text']
-        entities = self.ner.extract_entities(answer)
+
+    def run(self, question, prompt=False):
+        answer = self.llm.ask(question, prompt)[0]['text']
+        print(answer)
+        # input both question and answer to NER
+        entities = self.ner.extract_entities(question + " " + answer)
         entities_candidates = self.el.generate_candidates(entities)
         linked_entities = self.el.rank_candidates(answer, entities_candidates)
-        return linked_entities
-    
+        linked_entities = self.el.get_best_candidate(linked_entities)
+        return answer, linked_entities
+
+
 if __name__ == "__main__":
     # Define command line arguments
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument("--question", "-q", type=str, default="", help="Question to ask the model")
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--path",
+        "-p",
+        type=str,
+        default="/home/user/input_and_output/example_input.txt",
+        help="the path of input file")
+    parser.add_argument("--prompt",
+                        type=bool,
+                        default=False,
+                        help="whether to use question answering prompting")
+    parser.add_argument("--output",
+                        "-o",
+                        type=str,
+                        default="/home/user/input_and_output/output.txt",
+                        help="the path of output file")
 
     task = Task()
 
     # Parse command line arguments
-    # args = parser.parse_args()
-    # question = args.question
+    args = parser.parse_args()
+    input_path = args.path
+    prompt = args.prompt
+    output_path = args.output
+
+    # Read input file
+    with open(input_path, "r") as file:
+        questions = file.readlines()
+
+    for question in questions:
+        if question == "\n":
+            continue
+        question_id = question.split("\t")[0]
+        question_text = question.split("\t")[1]
+        answer, result = task.run(question_text, prompt)
+        with open(output_path, "a") as file:
+            file.write(f"{question_id}\tR\"{answer}\"\n")
+
+        for key, value in result.items():
+            # append to output file
+            with open(output_path, "a") as file:
+                file.write(
+                    f"{question_id}\tE\"{key}\"\t\"{value['wikidata_url']}\"\n"
+                )
 
     # while True:
     #     print("Please input your question:")
@@ -33,9 +73,7 @@ if __name__ == "__main__":
     #     if question == "exit":
     #         break
     #     print(task.run(question))
-    
-    print(task.run(question="Where is the captial of Italy?"))
+
+    # print(task.run(question="Managua is not the capital of Nicaragua. Yes or no?"))
 
     # .... implement other functions
-
-    

@@ -1,8 +1,9 @@
 llama-cpp-python
-spacy
 
-wikipedia-api
+wikipedia
 torch
 requests
 transformers
 SPARQLWrapper
+
+spacy
