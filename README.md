@@ -12,16 +12,16 @@
 
 1. **Build the image and start the default 1 container:** 
     ```bash
-    sh run_container
+    sh run_container.sh
     ```
 
 2. **Run the task using default parameters:**
     ```bash
-    sh run_container
+    sh run_program.sh
     ```
    **Specify  parameters:**
     ```bash
-    sh run_container \
+    sh run_program.sh \
         --path=/home/user/input_and_output/input.txt \ # specify input path
         --output=/home/user/input_and_output/output.txt \ # specify output path
         --prompt=True \ # it will use our predefined prompt, which sometimes improves the LLM model output.
