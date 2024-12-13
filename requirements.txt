@@ -5,5 +5,7 @@ torch
 requests
 transformers
 SPARQLWrapper
+sentence_transformers
+Wikipedia-API
 
 spacy

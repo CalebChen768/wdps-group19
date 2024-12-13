@@ -2,6 +2,7 @@ from llm import LLM
 from ner import NER
 from entity_linking import EL
 from answer_extract import Answer_extract
+from fact_checking import Fact_check
 import argparse
 
 class Task:
@@ -10,6 +11,7 @@ class Task:
         self.ner = NER()
         self.el = EL()
         self.ae = Answer_extract()
+        self.fc = Fact_check()
 
     def run(self, question, prompt=False):
         answer = self.llm.ask(question, prompt)[0]['text']
@@ -27,7 +29,14 @@ class Task:
         # print(f"linked_entities: {linked_entities}\n")
         # print(f"extracted_answer: {extracted_answer}\n")
         # print("\n\n\n\n\n\n\n\n\n\n\n\n\n")
-        return answer, linked_entities
+        
+        correctness = self.fc.fact_checking(question, extracted_answer)
+        if correctness == 1:
+            correctness = "Correct"
+        else:
+            correctness = "Incorrect"
+        return answer, correctness, linked_entities
+        # return answer, linked_entities
 
 
 if __name__ == "__main__":
@@ -66,7 +75,7 @@ if __name__ == "__main__":
             continue
         question_id = question.split("\t")[0]
         question_text = question.split("\t")[1]
-        answer, result = task.run(question_text, prompt)
+        answer, _, result = task.run(question_text, prompt)
         with open(output_path, "a") as file:
             file.write(f"{question_id}\tR\"{answer}\"\n")
 
