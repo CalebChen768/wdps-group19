@@ -1,13 +1,21 @@
 import torch
-from transformers import BertTokenizer, BertForSequenceClassification
+from transformers import BertTokenizer, BertForSequenceClassification, BertConfig
 
 class BoolQPredictor:
-    def __init__(self, model_path):
+    def __init__(self, model_path="yes_no_model.pkl"):
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         print(f"Using device: {self.device}")
+        with open(model_path, "rb") as f:
+            model_data = torch.load(f)
         
-        self.tokenizer = BertTokenizer.from_pretrained(model_path)
-        self.model = BertForSequenceClassification.from_pretrained(model_path)
+        config = BertConfig.from_dict(model_data["config"])
+        self.model = BertForSequenceClassification(config)
+        self.model.load_state_dict(model_data["model_state_dict"])
+        self.tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
+        self.tokenizer.vocab = model_data["tokenizer_state_dict"]
+
+        # self.tokenizer = BertTokenizer.from_pretrained(model_path)
+        # self.model = BertForSequenceClassification.from_pretrained(model_path)
         self.model.to(self.device)
         self.model.eval()
     
@@ -36,10 +44,10 @@ class BoolQPredictor:
 
 
 if __name__ == "__main__":
-    predictor = BoolQPredictor("./boolq_bert_model")
+    predictor = BoolQPredictor("yes_no_model.pkl")
     
     question = "Managua is not the capital of Nicaragua. Yes or no?"
-    passage = "Most people think Managua is the capital of Nicaragua.\nHowever, Managua is not the capital of Nicaragua.\nThe capital of Nicaragua is Managua.\nThe capital of Nicaragua is Managua. Managua is the capital of Nicaragua.\nThe capital"
+    passage = "Most people think Managua is the capital of Nicaragua.\nHowever, Managua is not the capital of Nicaragua.\nThe capital of Nicaragua is Managua."
     
     result = predictor.predict(question, passage)
     print(f"Question: {question}")

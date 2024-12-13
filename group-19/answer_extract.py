@@ -1,6 +1,7 @@
 from question_classifier import Question_classifier
 from transformers import pipeline
 from difflib import SequenceMatcher
+from judge import BoolQPredictor
 
 class Answer_extract:
     def __init__(self):
@@ -10,10 +11,11 @@ class Answer_extract:
     def extract(self, question, answer, linked_entities):
         question_category = self.question_classifier.question_classify(question)
 
-        #  a yes/no question
+        # a yes/no question
         if question_category == 1:
-            # use yes/no model
-            pass
+            predictor = BoolQPredictor("./boolq_bert_model")
+            result = predictor.predict(question, answer)
+            return result['answer']  # return Yes or No; result['confidence'] for confidence
 
         # other questions
         elif question_category == 2:
