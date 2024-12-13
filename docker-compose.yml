@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  wdps-instance:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./group-19:/home/user/code
+      - ./input_and_output:/home/user/input_and_output
+      - wdps-cache:/home/user/.cache
+    command: tail -f /dev/null
+
+volumes:
+  wdps-cache:

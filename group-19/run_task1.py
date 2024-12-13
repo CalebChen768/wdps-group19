@@ -23,12 +23,11 @@ class Task:
 if __name__ == "__main__":
     # Define command line arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--path",
-        "-p",
-        type=str,
-        default="/home/user/input_and_output/example_input.txt",
-        help="the path of input file")
+    parser.add_argument("--path",
+                        "-p",
+                        type=str,
+                        default="/home/user/input_and_output/example_input.txt",
+                        help="the path of input file")
     parser.add_argument("--prompt",
                         type=bool,
                         default=False,
@@ -36,10 +35,9 @@ if __name__ == "__main__":
     parser.add_argument("--output",
                         "-o",
                         type=str,
-                        default="/home/user/input_and_output/output.txt",
+                        default="/home/user/input_and_output/final_output.txt",
                         help="the path of output file")
 
-    task = Task()
 
     # Parse command line arguments
     args = parser.parse_args()
@@ -47,6 +45,8 @@ if __name__ == "__main__":
     prompt = args.prompt
     output_path = args.output
 
+    task = Task()
+        
     # Read input file
     with open(input_path, "r") as file:
         questions = file.readlines()

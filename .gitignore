@@ -166,3 +166,7 @@ cython_debug/
 
 # vscode
 .vscode/
+
+# input_and_output 
+input_and_output/*
+!input_and_output/example_input.txt
