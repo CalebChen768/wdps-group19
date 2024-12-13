@@ -12,29 +12,59 @@ class Fact_check:
         self.nlp = spacy.load("en_core_web_md")
     
     """
-        0: incorrect
-        1: correct
-        2: inconclusive
+    Args:
+    extracted_answer: Expected to be three possible values: "yes", "no" and an entity
+
+    Returns:
+    0: incorrect
+    1: correct
+    2: inconclusive
     """
-    def fact_checking(self, question, extracted_answer, threshold=0.60):
+    def fact_checking(self, question, extracted_answer, linked_entities, answer, threshold=0.60):
         keywords = self._extract_keywords(question)
         if keywords == []:
             return 2, []
+    
+        if extracted_answer in ["yes", "no"]:
+            entities = self._extract_entities(question)
+            entities = [linked_entities[i[0]] for i in entities]
+            for entity in entities:
+                text = self._get_wikipedia_text(entity['linked_entity'])
+                paragraphs = []
+                for adj in keywords:
+                    sentences = self._find_sentences_with_word(text, adj)
+                    paragraphs += sentences
+                paragraphs = list(set(paragraphs))
+                if paragraphs == []:
+                    continue
+                print("#######################")
+                print(self._efficient_similarity_calculation(paragraphs, answer))
+                print("#######################")
+                evidence_with_confidence = self._efficient_similarity_calculation(paragraphs, answer)
+                avg_conf = sum([i['similarity'] for i in evidence_with_confidence])/len([i['similarity'] for i in evidence_with_confidence])
+
+                if avg_conf > threshold:
+                    return 1 if extracted_answer == "yes" else 0
+                else:
+                    return 0 if extracted_answer == "yes" else 1
+
+            return 2 # since none of the entity is conclusive enough to return
         
-        tittle = extracted_answer["linked_entity"]
-        text = self._get_wikipedia_text(tittle)
-        paragraphs = []
-        for adj in keywords:
-            sentences = self._find_sentences_with_word(text, adj)
-            paragraphs += sentences
-        paragraphs = list(set(paragraphs))
-        # print(self._efficient_similarity_calculation(paragraphs, question))
-        evidence_with_confidence = self._efficient_similarity_calculation(paragraphs, question)
-        avg_conf = sum([i['similarity'] for i in evidence_with_confidence])/len([i['similarity'] for i in evidence_with_confidence])
-        if avg_conf > threshold:
-            return 1
-        else:
-            return 0
+        else:            
+            title = extracted_answer["linked_entity"]
+            text = self._get_wikipedia_text(title)
+            paragraphs = []
+            for adj in keywords:
+                sentences = self._find_sentences_with_word(text, adj)
+                paragraphs += sentences
+            paragraphs = list(set(paragraphs))
+            # print(self._efficient_similarity_calculation(paragraphs, answer))
+            evidence_with_confidence = self._efficient_similarity_calculation(paragraphs, answer)
+            avg_conf = sum([i['similarity'] for i in evidence_with_confidence])/len([i['similarity'] for i in evidence_with_confidence])
+            if avg_conf > threshold:
+                return 1
+            else:
+                return 0
         
         
         
@@ -103,6 +133,12 @@ class Fact_check:
                     results.append(token.text)
 
         return results
+    def _extract_entities(self, text:str) -> list:
+        doc = self.nlp(text)
+        entities = []
+        for ent in doc.ents:
+            entities.append((ent.text, ent.label_))
+        return entities
 
 
 # if __name__ == "__main__":
