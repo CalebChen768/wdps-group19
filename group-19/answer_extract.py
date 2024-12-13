@@ -13,7 +13,7 @@ class Answer_extract:
 
         # a yes/no question
         if question_category == 1:
-            predictor = BoolQPredictor("./boolq_bert_model")
+            predictor = BoolQPredictor("yes_no_model.pkl")
             result = predictor.predict(question, answer)
             return result['answer']  # return Yes or No; result['confidence'] for confidence
 
