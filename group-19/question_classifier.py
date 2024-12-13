@@ -10,7 +10,7 @@ class Question_classifier:
         self.nlp = spacy.load("en_core_web_sm")
         
         # Define WH-words and auxiliary verbs
-        self.wh_words = {"what", "who", "where", "whom", "whose", "how", "which"}
+        self.wh_words = {"what", "who", "where", "whom", "whose", "how", "which", "why", "when"}
         self.aux_verbs = {
             "am", "is", "are", "was", "were", "do", "does", "did", "have", "has", "had",
             "can", "could", "shall", "should", "will", "would", "may", "might", "must",
