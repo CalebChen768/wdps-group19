@@ -98,7 +98,6 @@ class Question_classifier:
         if not has_verb:
             return 2  # No verbs detected, classify as Category 2
 
-        # Default classification as Category 1 (complete declarative sentence)
         return 1
 
 
@@ -142,3 +141,6 @@ if __name__ == "__main__":
     for q in questions:
         category = classifier.question_classify(q)
         print(f"'{q}' => Category {category}")
+
+        # catalog 1: General yes/no questions or complete declarative sentences
+        # catalog 2: WH-questions, incomplete sentences, or questions requiring completion

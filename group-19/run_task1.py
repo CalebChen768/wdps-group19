@@ -1,6 +1,7 @@
 from llm import LLM
 from ner import NER
 from entity_linking import EL
+from answer_extract import Answer_extract
 import argparse
 
 class Task:
@@ -8,15 +9,24 @@ class Task:
         self.llm = LLM()
         self.ner = NER()
         self.el = EL()
+        self.ae = Answer_extract()
 
     def run(self, question, prompt=False):
         answer = self.llm.ask(question, prompt)[0]['text']
         print(answer)
         # input both question and answer to NER
-        entities = self.ner.extract_entities(question + " " + answer)
+        entities = self.ner.extract_entities(question + ". " + answer)
         entities_candidates = self.el.generate_candidates(entities)
         linked_entities = self.el.rank_candidates(answer, entities_candidates)
         linked_entities = self.el.get_best_candidate(linked_entities)
+
+        # task2
+        extracted_answer = self.ae.extract(question, answer, linked_entities)
+        # print(f"question: {question}\n")
+        # print(f"answer: {answer}\n")
+        # print(f"linked_entities: {linked_entities}\n")
+        # print(f"extracted_answer: {extracted_answer}\n")
+        # print("\n\n\n\n\n\n\n\n\n\n\n\n\n")
         return answer, linked_entities
 
 
