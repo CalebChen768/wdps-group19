@@ -1,21 +1,26 @@
 import torch
 from transformers import BertTokenizer, BertForSequenceClassification, BertConfig
+import os
 
 class BoolQPredictor:
     def __init__(self, model_path="yes_no_model.pkl"):
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         print(f"Using device: {self.device}")
-        with open(model_path, "rb") as f:
-            model_data = torch.load(f)
         
-        config = BertConfig.from_dict(model_data["config"])
-        self.model = BertForSequenceClassification(config)
-        self.model.load_state_dict(model_data["model_state_dict"])
-        self.tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
-        self.tokenizer.vocab = model_data["tokenizer_state_dict"]
+        if not os.path.isfile(model_path):
+            hugging_face_path = "SomnusYM/Bert-boolq-base"
+            self.tokenizer = BertTokenizer.from_pretrained(hugging_face_path)
+            self.model = BertForSequenceClassification.from_pretrained(hugging_face_path)
+        else:
+            with open(model_path, "rb") as f:
+                model_data = torch.load(f)
+            
+            config = BertConfig.from_dict(model_data["config"])
+            self.model = BertForSequenceClassification(config)
+            self.model.load_state_dict(model_data["model_state_dict"])
+            self.tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
+            self.tokenizer.vocab = model_data["tokenizer_state_dict"]
 
-        # self.tokenizer = BertTokenizer.from_pretrained(model_path)
-        # self.model = BertForSequenceClassification.from_pretrained(model_path)
         self.model.to(self.device)
         self.model.eval()
     
