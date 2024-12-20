@@ -30,12 +30,20 @@ class Task:
         # print(f"extracted_answer: {extracted_answer}\n")
         # print("\n\n\n\n\n\n\n\n\n\n\n\n\n")
         
-        correctness = self.fc.fact_checking(question, extracted_answer)
+        correctness = self.fc.fact_checking(question, extracted_answer, linked_entities, answer)
         if correctness == 1:
-            correctness = "Correct"
+            correctness = "correct"
         else:
-            correctness = "Incorrect"
-        return answer, correctness, linked_entities
+            correctness = "incorrect"
+        
+
+        if extracted_answer == 0:
+            extracted_answer = ""
+        elif extracted_answer in ["Yes", "No"]:
+            extracted_answer = extracted_answer.lower()
+        else:
+            extracted_answer = extracted_answer["linked_entity"]
+        return answer, correctness, linked_entities, extracted_answer
         # return answer, linked_entities
 
 
@@ -75,16 +83,22 @@ if __name__ == "__main__":
             continue
         question_id = question.split("\t")[0]
         question_text = question.split("\t")[1]
-        answer, _, result = task.run(question_text, prompt)
+        answer, correctness, result, extracted_answer = task.run(question_text, prompt)
         with open(output_path, "a") as file:
             file.write(f"{question_id}\tR\"{answer}\"\n")
-
-        for key, value in result.items():
-            # append to output file
-            with open(output_path, "a") as file:
+            file.write(
+                f"{question_id}\tA\"{extracted_answer}\"\n"
+            )
+            file.write(
+                f"{question_id}\tC\"{correctness}\"\n"
+            )
+        with open(output_path, "a") as file:
+            for key, value in result.items():
+                # append to output file
                 file.write(
                     f"{question_id}\tE\"{key}\"\t\"{value['wikidata_url']}\"\n"
                 )
+
 
     # while True:
     #     print("Please input your question:")

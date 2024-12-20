@@ -23,9 +23,10 @@ class Fact_check:
     def fact_checking(self, question, extracted_answer, linked_entities, answer, threshold=0.60):
         keywords = self._extract_keywords(question)
         if keywords == []:
-            return 2, []
-    
-        if extracted_answer in ["yes", "no"]:
+            return 2
+        if extracted_answer == 0:
+            return 2
+        if extracted_answer in ["Yes", "No"]:
             entities = self._extract_entities(question)
             entities = [linked_entities[i[0]] for i in entities]
             for entity in entities:
@@ -50,7 +51,8 @@ class Fact_check:
 
             return 2 # since none of the entity is conclusive enough to return
         
-        else:            
+        else:
+            # print(extracted_answer)            
             title = extracted_answer["linked_entity"]
             text = self._get_wikipedia_text(title)
             paragraphs = []

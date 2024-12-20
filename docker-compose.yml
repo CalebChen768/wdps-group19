@@ -7,7 +7,7 @@ services:
     volumes:
       - ./group-19:/home/user/code
       - ./input_and_output:/home/user/input_and_output
-      - wdps-cache:/home/user/.cache
+      - wdps-cache:/home/user/.cache:rw
     command: tail -f /dev/null
 
 volumes:

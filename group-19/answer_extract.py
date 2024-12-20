@@ -15,6 +15,7 @@ class Answer_extract:
         if question_category == 1:
             predictor = BoolQPredictor("yes_no_model.pkl")
             result = predictor.predict(question, answer)
+            # print("I am the result for question one: "+str(result))
             return result['answer']  # return Yes or No; result['confidence'] for confidence
 
         # other questions

@@ -28,7 +28,7 @@ fi
 # 初始化缓存卷
 echo "Initializing cache volume..."
 docker volume create wdps-group19_wdps-cache
-docker run --rm -v wdps-group19_wdps-cache:/home/user/.cache busybox sh -c "mkdir -p /home/user/.cache/pip"
+docker run --rm -v wdps-group19_wdps-cache:/home/user/.cache busybox sh -c "mkdir -p /home/user/.cache/pip" && sudo chmod -R 777 /home/user/.cache
 
 # 清理旧容器
 echo "Stopping and removing existing wdps-instance containers..."
