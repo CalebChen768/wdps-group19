@@ -24,6 +24,6 @@
     sh run_program.sh \
         --path=/home/user/input_and_output/input.txt \ # specify input path
         --output=/home/user/input_and_output/output.txt \ # specify output path
-        --prompt=True \ # it will use our predefined prompt, which sometimes improves the LLM model output.
-        --parall=4 # it will use specified multiple containers for parallel computation.
+        --prompt \ # it will use our predefined prompt, which sometimes improves the LLM model output.
+        --parall=4 # it will use specified multiple containers for parallel computation. (max 4)
     ```
