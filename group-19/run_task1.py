@@ -79,25 +79,28 @@ if __name__ == "__main__":
         questions = file.readlines()
 
     for question in questions:
-        if question == "\n":
+        if question.strip() == "":
             continue
-        question_id = question.split("\t")[0]
-        question_text = question.split("\t")[1]
-        answer, correctness, result, extracted_answer = task.run(question_text, prompt)
-        with open(output_path, "a") as file:
-            file.write(f"{question_id}\tR\"{answer}\"\n")
-            file.write(
-                f"{question_id}\tA\"{extracted_answer}\"\n"
-            )
-            file.write(
-                f"{question_id}\tC\"{correctness}\"\n"
-            )
-        with open(output_path, "a") as file:
-            for key, value in result.items():
-                # append to output file
-                file.write(
-                    f"{question_id}\tE\"{key}\"\t\"{value['wikidata_url']}\"\n"
-                )
+
+        try:
+            question_id = question.split("\t")[0]
+            question_text = question.split("\t")[1]
+
+            # run task
+            answer, correctness, result, extracted_answer = task.run(question_text, prompt)
+
+            # write to output file
+            with open(output_path, "a") as file:
+                file.write(f"{question_id}\tR\"{answer}\"\n")
+                file.write(f"{question_id}\tA\"{extracted_answer}\"\n")
+                file.write(f"{question_id}\tC\"{correctness}\"\n")
+                for key, value in result.items():
+                    file.write(f"{question_id}\tE\"{key}\"\t\"{value['wikidata_url']}\"\n")
+
+        except Exception as e:
+            # catch exception and print error message
+            error_message = f"Error processing question ID {question_id}: {str(e)}\n"
+            print(error_message)
 
 
     # while True:
