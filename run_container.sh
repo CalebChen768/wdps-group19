@@ -28,7 +28,13 @@ fi
 # 初始化缓存卷
 echo "Initializing cache volume..."
 docker volume create wdps-group19_wdps-cache
-docker run --rm -v wdps-group19_wdps-cache:/home/user/.cache busybox sh -c "mkdir -p /home/user/.cache/pip" && sudo chmod -R 777 /home/user/.cache
+REAL_PATH=$(docker volume inspect wdps-group19_wdps-cache | grep '"Mountpoint"' | sed -E 's/.*"Mountpoint": "(.*)",/\1/')
+if [ -z "$REAL_PATH" ]; then
+  echo "Error: Could not find mountpoint for volume wdps-group19_wdps-cache."
+  exit 1
+fi
+sudo mkdir -p "$REAL_PATH/pip"
+sudo chmod -R 777 "$REAL_PATH"
 
 # 清理旧容器
 echo "Stopping and removing existing wdps-instance containers..."
